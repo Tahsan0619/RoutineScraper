@@ -1,0 +1,616 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated_at": "2026-01-21T10:00:00+06:00",
+    "tz": "Asia/Dhaka",
+    "days_off": ["Fri"],
+    "department": "Department of Educational Technology and Engineering",
+    "university": "University of Frontier Technology, Bangladesh",
+    "slot_labels": ["08:00-09:30", "09:30-11:00", "11:00-12:30", "12:30-14:00", "14:00-15:30", "15:30-17:00"]
+  },
+  "teachers": [
+    {
+      "id": "T001",
+      "name": "Dr. Azizur Rahman",
+      "initial": "AZ",
+      "designation": "Professor",
+      "phone": "+880-1711-123456",
+      "email": "azizur.rahman@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    },
+    {
+      "id": "T002",
+      "name": "Dr. Rashida Sultana",
+      "initial": "RS",
+      "designation": "Associate Professor",
+      "phone": "+880-1711-234567",
+      "email": "rashida.sultana@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    },
+    {
+      "id": "T003",
+      "name": "Md. Kamal Hossain",
+      "initial": "KH",
+      "designation": "Assistant Professor",
+      "phone": "+880-1711-345678",
+      "email": "kamal.hossain@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    },
+    {
+      "id": "T004",
+      "name": "Fatema Begum",
+      "initial": "FB",
+      "designation": "Lecturer",
+      "phone": "+880-1711-456789",
+      "email": "fatema.begum@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    },
+    {
+      "id": "T005",
+      "name": "Dr. Shamim Ahmed",
+      "initial": "SA",
+      "designation": "Professor",
+      "phone": "+880-1711-567890",
+      "email": "shamim.ahmed@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    },
+    {
+      "id": "T006",
+      "name": "Nusrat Jahan",
+      "initial": "NJ",
+      "designation": "Lecturer",
+      "phone": "+880-1711-678901",
+      "email": "nusrat.jahan@uft.edu.bd",
+      "home_department": "Educational Technology and Engineering"
+    }
+  ],
+  "batches": [
+    {
+      "id": "B001",
+      "name": "EdTE-57",
+      "session": "2023-24"
+    },
+    {
+      "id": "B002",
+      "name": "EdTE-58",
+      "session": "2024-25"
+    },
+    {
+      "id": "B003",
+      "name": "EdTE-59",
+      "session": "2025-26"
+    }
+  ],
+  "courses": [
+    {
+      "code": "ETE101",
+      "title": "Introduction to Educational Technology"
+    },
+    {
+      "code": "ETE102",
+      "title": "Programming Fundamentals"
+    },
+    {
+      "code": "ETE103",
+      "title": "Digital Media Production"
+    },
+    {
+      "code": "ETE201",
+      "title": "Instructional Design"
+    },
+    {
+      "code": "ETE202",
+      "title": "Web Development"
+    },
+    {
+      "code": "ETE203",
+      "title": "Database Management Systems"
+    },
+    {
+      "code": "ETE301",
+      "title": "E-Learning Systems"
+    },
+    {
+      "code": "ETE302",
+      "title": "Mobile App Development"
+    },
+    {
+      "code": "ETE303",
+      "title": "Educational Data Analytics"
+    },
+    {
+      "code": "ETE401",
+      "title": "Capstone Project"
+    },
+    {
+      "code": "ETE402",
+      "title": "Emerging Technologies in Education"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "R101",
+      "name": "Room 101"
+    },
+    {
+      "id": "R102",
+      "name": "Room 102"
+    },
+    {
+      "id": "R201",
+      "name": "Room 201"
+    },
+    {
+      "id": "R202",
+      "name": "Room 202"
+    },
+    {
+      "id": "LAB1",
+      "name": "Computer Lab 1"
+    },
+    {
+      "id": "LAB2",
+      "name": "Computer Lab 2"
+    }
+  ],
+  "students": [
+    {
+      "student_id": "2023010101",
+      "name": "Ahmed Ali",
+      "batch_id": "B001"
+    },
+    {
+      "student_id": "2023010102",
+      "name": "Fatima Khan",
+      "batch_id": "B001"
+    },
+    {
+      "student_id": "2023010103",
+      "name": "Rahman Sheikh",
+      "batch_id": "B001"
+    },
+    {
+      "student_id": "2024010101",
+      "name": "Sadia Islam",
+      "batch_id": "B002"
+    },
+    {
+      "student_id": "2024010102",
+      "name": "Mehedi Hasan",
+      "batch_id": "B002"
+    },
+    {
+      "student_id": "2024010103",
+      "name": "Tasnim Ahmed",
+      "batch_id": "B002"
+    },
+    {
+      "student_id": "2025010101",
+      "name": "Rifat Mahmud",
+      "batch_id": "B003"
+    },
+    {
+      "student_id": "2025010102",
+      "name": "Nadia Rahman",
+      "batch_id": "B003"
+    },
+    {
+      "student_id": "2025010103",
+      "name": "Sakib Hassan",
+      "batch_id": "B003"
+    }
+  ],
+  "timetable": [
+    {
+      "day": "Sun",
+      "batch_id": "B001",
+      "teacher_initial": "AZ",
+      "course_code": "ETE301",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Sun",
+      "batch_id": "B001",
+      "teacher_initial": "RS",
+      "course_code": "ETE302",
+      "type": "Sessional",
+      "group": "G-1",
+      "room_id": "LAB1",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "12:30"
+    },
+    {
+      "day": "Sun",
+      "batch_id": "B002",
+      "teacher_initial": "KH",
+      "course_code": "ETE201",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Sun",
+      "batch_id": "B002",
+      "teacher_initial": "FB",
+      "course_code": "ETE202",
+      "type": "Sessional",
+      "group": null,
+      "room_id": "LAB2",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "12:30"
+    },
+    {
+      "day": "Sun",
+      "batch_id": "B003",
+      "teacher_initial": "SA",
+      "course_code": "ETE101",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R201",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "12:30"
+    },
+    {
+      "day": "Sun",
+      "batch_id": "B003",
+      "teacher_initial": "NJ",
+      "course_code": "ETE102",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R202",
+      "mode": "Onsite",
+      "start": "14:00",
+      "end": "15:30"
+    },
+    {
+      "day": "Mon",
+      "batch_id": "B001",
+      "teacher_initial": "SA",
+      "course_code": "ETE303",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Mon",
+      "batch_id": "B001",
+      "teacher_initial": "AZ",
+      "course_code": "ETE301",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "11:00"
+    },
+    {
+      "day": "Mon",
+      "batch_id": "B002",
+      "teacher_initial": "RS",
+      "course_code": "ETE203",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Mon",
+      "batch_id": "B002",
+      "teacher_initial": "KH",
+      "course_code": "ETE201",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "12:30"
+    },
+    {
+      "day": "Mon",
+      "batch_id": "B003",
+      "teacher_initial": "NJ",
+      "course_code": "ETE102",
+      "type": "Sessional",
+      "group": "G-1",
+      "room_id": "LAB1",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "12:30"
+    },
+    {
+      "day": "Tue",
+      "batch_id": "B001",
+      "teacher_initial": "RS",
+      "course_code": "ETE302",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Tue",
+      "batch_id": "B001",
+      "teacher_initial": "SA",
+      "course_code": "ETE303",
+      "type": "Sessional",
+      "group": null,
+      "room_id": "LAB1",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "12:30"
+    },
+    {
+      "day": "Tue",
+      "batch_id": "B002",
+      "teacher_initial": "FB",
+      "course_code": "ETE202",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Tue",
+      "batch_id": "B002",
+      "teacher_initial": "RS",
+      "course_code": "ETE203",
+      "type": "Sessional",
+      "group": null,
+      "room_id": "LAB2",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "14:00"
+    },
+    {
+      "day": "Tue",
+      "batch_id": "B003",
+      "teacher_initial": "SA",
+      "course_code": "ETE101",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R201",
+      "mode": "Onsite",
+      "start": "14:00",
+      "end": "15:30"
+    },
+    {
+      "day": "Wed",
+      "batch_id": "B001",
+      "teacher_initial": "AZ",
+      "course_code": "ETE401",
+      "type": "Lecture",
+      "group": null,
+      "room_id": null,
+      "mode": "Online",
+      "start": "09:30",
+      "end": "11:00"
+    },
+    {
+      "day": "Wed",
+      "batch_id": "B001",
+      "teacher_initial": "RS",
+      "course_code": "ETE302",
+      "type": "Sessional",
+      "group": "G-2",
+      "room_id": "LAB1",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "14:00"
+    },
+    {
+      "day": "Wed",
+      "batch_id": "B002",
+      "teacher_initial": "KH",
+      "course_code": "ETE201",
+      "type": "Lecture",
+      "group": null,
+      "room_id": null,
+      "mode": "Online",
+      "start": "09:30",
+      "end": "11:00"
+    },
+    {
+      "day": "Wed",
+      "batch_id": "B003",
+      "teacher_initial": "NJ",
+      "course_code": "ETE102",
+      "type": "Sessional",
+      "group": "G-2",
+      "room_id": "LAB2",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "14:00"
+    },
+    {
+      "day": "Wed",
+      "batch_id": "B003",
+      "teacher_initial": "FB",
+      "course_code": "ETE103",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R202",
+      "mode": "Onsite",
+      "start": "14:00",
+      "end": "15:30"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B001",
+      "teacher_initial": "SA",
+      "course_code": "ETE303",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B001",
+      "teacher_initial": "AZ",
+      "course_code": "ETE401",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "12:30"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B002",
+      "teacher_initial": "FB",
+      "course_code": "ETE202",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B002",
+      "teacher_initial": "RS",
+      "course_code": "ETE203",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "12:30"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B003",
+      "teacher_initial": "SA",
+      "course_code": "ETE101",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R201",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "11:00"
+    },
+    {
+      "day": "Thu",
+      "batch_id": "B003",
+      "teacher_initial": "FB",
+      "course_code": "ETE103",
+      "type": "Sessional",
+      "group": null,
+      "room_id": "LAB1",
+      "mode": "Onsite",
+      "start": "14:00",
+      "end": "17:00"
+    },
+    {
+      "day": "Sat",
+      "batch_id": "B001",
+      "teacher_initial": "RS",
+      "course_code": "ETE402",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R101",
+      "mode": "Onsite",
+      "start": "08:00",
+      "end": "09:30"
+    },
+    {
+      "day": "Sat",
+      "batch_id": "B002",
+      "teacher_initial": "KH",
+      "course_code": "ETE201",
+      "type": "Lecture",
+      "group": null,
+      "room_id": "R102",
+      "mode": "Onsite",
+      "start": "09:30",
+      "end": "11:00"
+    },
+    {
+      "day": "Sat",
+      "batch_id": "B003",
+      "teacher_initial": "NJ",
+      "course_code": "ETE102",
+      "type": "Tutorial",
+      "group": null,
+      "room_id": "R201",
+      "mode": "Onsite",
+      "start": "11:00",
+      "end": "12:30"
+    }
+  ],
+  "admins": [
+    {
+      "id": "A001",
+      "username": "chairman",
+      "password": "chairman123",
+      "type": "super_admin",
+      "teacher_initial": null
+    },
+    {
+      "id": "A002",
+      "username": "AZ",
+      "password": "az123",
+      "type": "teacher_admin",
+      "teacher_initial": "AZ"
+    },
+    {
+      "id": "A003",
+      "username": "RS",
+      "password": "rs123",
+      "type": "teacher_admin",
+      "teacher_initial": "RS"
+    },
+    {
+      "id": "A004",
+      "username": "KH",
+      "password": "kh123",
+      "type": "teacher_admin",
+      "teacher_initial": "KH"
+    },
+    {
+      "id": "A005",
+      "username": "FB",
+      "password": "fb123",
+      "type": "teacher_admin",
+      "teacher_initial": "FB"
+    },
+    {
+      "id": "A006",
+      "username": "SA",
+      "password": "sa123",
+      "type": "teacher_admin",
+      "teacher_initial": "SA"
+    },
+    {
+      "id": "A007",
+      "username": "NJ",
+      "password": "nj123",
+      "type": "teacher_admin",
+      "teacher_initial": "NJ"
+    }
+  ]
+}
