@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../services/data_repository.dart';
+import '../services/supabase_service.dart';
 import '../widgets/gradient_shell.dart';
 import '../widgets/brand_card.dart';
 import '../widgets/big_nav_button.dart';
@@ -17,14 +19,18 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  final repo = DataRepository();
+  late final DataRepository repo;
   bool loading = true;
   String? error;
 
   @override
   void initState() {
     super.initState();
-    repo.load().then((_) {
+    final service = context.read<SupabaseService>();
+    service.initialize().then((_) {
+      repo = DataRepository(service);
+      return repo.load();
+    }).then((_) {
       setState(() => loading = false);
     }).catchError((e) {
       setState(() {
@@ -96,7 +102,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                     BigNavButton(
                       icon: Icons.admin_panel_settings,
-                      label: "Admin Login",
+                      label: "Login",
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(

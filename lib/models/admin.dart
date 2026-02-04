@@ -14,17 +14,17 @@ class Admin {
   });
 
   factory Admin.fromJson(Map<String, dynamic> json) => Admin(
-        id: json['id'],
-        username: json['username'],
-        password: json['password'],
-        type: json['type'],
+        id: json['id'] ?? '',
+        username: json['username'] ?? '',
+        password: json['password_hash'] ?? json['password'] ?? '',
+        type: json['type'] ?? 'teacher_admin',
         teacherInitial: json['teacher_initial'],
       );
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'username': username,
-        'password': password,
+        'password_hash': password,
         'type': type,
         'teacher_initial': teacherInitial,
       };

@@ -78,240 +78,275 @@ class _AddEditScheduleScreenState extends State<AddEditScheduleScreen> {
 
     return GradientShell(
       title: widget.editEntry == null ? 'Add Class' : 'Edit Class',
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Day: ${widget.day}',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+      useDarkBackground: true,
+      child: Theme(
+        data: ThemeData.dark().copyWith(
+          colorScheme: ThemeData.dark().colorScheme.copyWith(
+                primary: const Color(0xFF5B7CFF),
+                secondary: const Color(0xFF5B7CFF),
               ),
-              const SizedBox(height: 24),
-              DropdownButtonFormField<String>(
-                value: selectedBatchId,
-                decoration: const InputDecoration(
-                  labelText: 'Batch *',
-                  border: OutlineInputBorder(),
-                ),
-                items: batches
-                    .map((batch) => DropdownMenuItem(
-                          value: batch.id,
-                          child: Text('${batch.name} (${batch.session})'),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedBatchId = value;
-                  });
-                },
-                validator: (value) => value == null ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: selectedTeacherInitial,
-                decoration: const InputDecoration(
-                  labelText: 'Teacher *',
-                  border: OutlineInputBorder(),
-                ),
-                items: teachers
-                    .map((teacher) => DropdownMenuItem(
-                          value: teacher.initial,
-                          child: Text('${teacher.name} (${teacher.initial})'),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedTeacherInitial = value;
-                  });
-                },
-                validator: (value) => value == null ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: selectedCourseCode,
-                decoration: const InputDecoration(
-                  labelText: 'Course *',
-                  border: OutlineInputBorder(),
-                ),
-                items: courses
-                    .map((course) => DropdownMenuItem(
-                          value: course.code,
-                          child: Text('${course.code} - ${course.title}'),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCourseCode = value;
-                  });
-                },
-                validator: (value) => value == null ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectedType,
-                      decoration: const InputDecoration(
-                        labelText: 'Type *',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: types
-                          .map((type) => DropdownMenuItem(
-                                value: type,
-                                child: Text(type),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedType = value;
-                        });
-                      },
-                      validator: (value) => value == null ? 'Required' : null,
-                    ),
+          scaffoldBackgroundColor: Colors.transparent,
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: true,
+            fillColor: Color(0xFF1F1F1F),
+            border: OutlineInputBorder(),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF424242)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF5B7CFF)),
+            ),
+            labelStyle: TextStyle(color: Colors.white70),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Colors.white70),
+            ),
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFF5B7CFF),
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Day: ${widget.day}',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: selectedGroup,
-                      decoration: const InputDecoration(
-                        labelText: 'Group',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: groups
-                          .map((group) => DropdownMenuItem(
-                                value: group,
-                                child: Text(group),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedGroup = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: selectedMode,
-                decoration: const InputDecoration(
-                  labelText: 'Mode *',
-                  border: OutlineInputBorder(),
                 ),
-                items: modes
-                    .map((mode) => DropdownMenuItem(
-                          value: mode,
-                          child: Text(mode),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedMode = value;
-                    if (value == 'Online') {
-                      selectedRoomId = null;
-                    }
-                  });
-                },
-                validator: (value) => value == null ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              if (selectedMode == 'Onsite')
+                const SizedBox(height: 24),
                 DropdownButtonFormField<String>(
-                  value: selectedRoomId,
+                  value: selectedBatchId,
                   decoration: const InputDecoration(
-                    labelText: 'Room',
+                    labelText: 'Batch *',
                     border: OutlineInputBorder(),
                   ),
-                  items: rooms
-                      .map((room) => DropdownMenuItem(
-                            value: room.id,
-                            child: Text(room.name),
+                  items: batches
+                      .map((batch) => DropdownMenuItem(
+                            value: batch.id,
+                            child: Text('${batch.name} (${batch.session})'),
                           ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedRoomId = value;
+                      selectedBatchId = value;
                     });
                   },
+                  validator: (value) => value == null ? 'Required' : null,
                 ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: startTime ?? TimeOfDay.now(),
-                        );
-                        if (time != null) {
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedTeacherInitial,
+                  decoration: const InputDecoration(
+                    labelText: 'Teacher *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: teachers
+                      .map((teacher) => DropdownMenuItem(
+                            value: teacher.initial,
+                            child: Text('${teacher.name} (${teacher.initial})'),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTeacherInitial = value;
+                    });
+                  },
+                  validator: (value) => value == null ? 'Required' : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedCourseCode,
+                  decoration: const InputDecoration(
+                    labelText: 'Course *',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: courses
+                      .map((course) => DropdownMenuItem(
+                            value: course.code,
+                            child: Text('${course.code} - ${course.title}'),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCourseCode = value;
+                    });
+                  },
+                  validator: (value) => value == null ? 'Required' : null,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedType,
+                        decoration: const InputDecoration(
+                          labelText: 'Type *',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: types
+                            .map((type) => DropdownMenuItem(
+                                  value: type,
+                                  child: Text(type),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
                           setState(() {
-                            startTime = time;
+                            selectedType = value;
                           });
-                        }
-                      },
-                      icon: const Icon(Icons.access_time),
-                      label: Text(startTime == null
-                          ? 'Start Time *'
-                          : '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}'),
+                        },
+                        validator: (value) => value == null ? 'Required' : null,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: endTime ?? TimeOfDay.now(),
-                        );
-                        if (time != null) {
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedGroup,
+                        decoration: const InputDecoration(
+                          labelText: 'Group',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: groups
+                            .map((group) => DropdownMenuItem(
+                                  value: group,
+                                  child: Text(group),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
                           setState(() {
-                            endTime = time;
+                            selectedGroup = value;
                           });
-                        }
-                      },
-                      icon: const Icon(Icons.access_time),
-                      label: Text(endTime == null
-                          ? 'End Time *'
-                          : '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}'),
+                        },
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedMode,
+                  decoration: const InputDecoration(
+                    labelText: 'Mode *',
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
+                  items: modes
+                      .map((mode) => DropdownMenuItem(
+                            value: mode,
+                            child: Text(mode),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedMode = value;
+                      if (value == 'Online') {
+                        selectedRoomId = null;
+                      }
+                    });
+                  },
+                  validator: (value) => value == null ? 'Required' : null,
+                ),
+                const SizedBox(height: 16),
+                if (selectedMode == 'Onsite')
+                  DropdownButtonFormField<String>(
+                    value: selectedRoomId,
+                    decoration: const InputDecoration(
+                      labelText: 'Room',
+                      border: OutlineInputBorder(),
                     ),
+                    items: rooms
+                        .map((room) => DropdownMenuItem(
+                              value: room.id,
+                              child: Text(room.name),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRoomId = value;
+                      });
+                    },
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: FilledButton(
-                      onPressed: _saveEntry,
-                      child: Text(widget.editEntry == null ? 'Add' : 'Save'),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: startTime ?? TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              startTime = time;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.access_time),
+                        label: Text(startTime == null
+                            ? 'Start Time *'
+                            : '${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: endTime ?? TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              endTime = time;
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.access_time),
+                        label: Text(endTime == null
+                            ? 'End Time *'
+                            : '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _saveEntry,
+                        child: Text(widget.editEntry == null ? 'Add' : 'Save'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _saveEntry() {
+  Future<void> _saveEntry() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -338,13 +373,17 @@ class _AddEditScheduleScreenState extends State<AddEditScheduleScreen> {
           '${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}',
     );
 
-    widget.repo.addTimetableEntry(entry);
-    
+    final isEditing = widget.editEntry != null;
+    if (isEditing) {
+      await widget.repo.updateTimetableEntry(widget.editEntry!, entry);
+    } else {
+      await widget.repo.addTimetableEntry(entry);
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(widget.editEntry == null
-            ? 'Class added successfully'
-            : 'Class updated successfully'),
+        content:
+            Text(isEditing ? 'Class updated successfully' : 'Class added successfully'),
         backgroundColor: Colors.green,
       ),
     );

@@ -47,4 +47,17 @@ class AppData {
             ? (json['admins'] as List).map((e) => Admin.fromJson(e)).toList()
             : [],
       );
+
+  Map<String, dynamic> toJson({List<TimetableEntry>? timetableOverride}) => {
+        'meta': meta.toJson(),
+        'teachers': teachers.map((t) => t.toJson()).toList(),
+        'batches': batches.map((b) => b.toJson()).toList(),
+        'courses': courses.map((c) => c.toJson()).toList(),
+        'rooms': rooms.map((r) => r.toJson()).toList(),
+        'students': students.map((s) => s.toJson()).toList(),
+        'timetable': (timetableOverride ?? timetable)
+            .map((e) => e.toJson())
+            .toList(),
+        'admins': admins.map((a) => a.toJson()).toList(),
+      };
 }

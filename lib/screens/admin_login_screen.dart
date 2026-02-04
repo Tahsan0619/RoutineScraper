@@ -78,7 +78,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return GradientShell(
-      title: 'Admin Login',
+      title: 'Login',
       child: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
