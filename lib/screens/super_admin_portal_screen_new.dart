@@ -3600,6 +3600,7 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
     return FutureBuilder(
       future: Future.wait([
         service.getAllTimetableEntries(),
+        service.getBatches(),
       ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -3610,95 +3611,101 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
-        final timetableEntries = snapshot.data![0] as List;
+        final entries = snapshot.data![0] as List<TimetableEntry>;
+        final batches = snapshot.data![1] as List<Batch>;
+        final batchNameMap = <String, String>{};
+        for (var batch in batches) {
+          batchNameMap[batch.id] = '${batch.name} (${batch.session})';
+        }
 
-        // Convert to TimetableEntry objects
-        final entries = timetableEntries
-            .map((e) => TimetableEntry.fromJson(e))
-            .toList();
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 600;
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Analytics Dashboard',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(isWide ? 20 : 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Analytics Dashboard',
+                    style: GoogleFonts.poppins(
+                      fontSize: isWide ? 24 : 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // Key Metrics Row - responsive wrap
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      _MetricCard(
+                        title: 'Total Classes',
+                        value: entries.length.toString(),
+                        icon: Icons.school,
+                        color: Colors.blue,
+                        isCompact: !isWide,
+                      ),
+                      _MetricCard(
+                        title: 'Online Classes',
+                        value: entries
+                            .where((e) => e.mode.toLowerCase() == 'online')
+                            .length
+                            .toString(),
+                        icon: Icons.videocam,
+                        color: Colors.green,
+                        isCompact: !isWide,
+                      ),
+                      _MetricCard(
+                        title: 'Onsite Classes',
+                        value: entries
+                            .where((e) => e.mode.toLowerCase() == 'onsite')
+                            .length
+                            .toString(),
+                        icon: Icons.location_on,
+                        color: Colors.orange,
+                        isCompact: !isWide,
+                      ),
+                      _MetricCard(
+                        title: 'Cancelled',
+                        value: entries
+                            .where((e) => e.isCancelled == true)
+                            .length
+                            .toString(),
+                        icon: Icons.cancel,
+                        color: Colors.red,
+                        isCompact: !isWide,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Classes by Batch
+                  _buildClassesByBatch(entries, batchNameMap),
+                  const SizedBox(height: 30),
+
+                  // Classes by Day
+                  _buildClassesByDay(entries, isWide),
+                  const SizedBox(height: 30),
+
+                  // Classes by Type
+                  _buildClassesByType(entries, isWide),
+                  const SizedBox(height: 30),
+
+                  // Classes by Mode
+                  _buildClassesByMode(entries),
+                ],
               ),
-              const SizedBox(height: 20),
-              
-              // Key Metrics Row
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _MetricCard(
-                      title: 'Total Classes',
-                      value: entries.length.toString(),
-                      icon: Icons.school,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 12),
-                    _MetricCard(
-                      title: 'Online Classes',
-                      value: entries
-                          .where((e) => e.mode.toLowerCase() == 'online')
-                          .length
-                          .toString(),
-                      icon: Icons.videocam,
-                      color: Colors.green,
-                    ),
-                    const SizedBox(width: 12),
-                    _MetricCard(
-                      title: 'Onsite Classes',
-                      value: entries
-                          .where((e) => e.mode.toLowerCase() == 'onsite')
-                          .length
-                          .toString(),
-                      icon: Icons.location_on,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 12),
-                    _MetricCard(
-                      title: 'Cancelled',
-                      value: entries
-                          .where((e) => e.isCancelled == true)
-                          .length
-                          .toString(),
-                      icon: Icons.cancel,
-                      color: Colors.red,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // Classes by Batch
-              _buildClassesByBatch(entries),
-              const SizedBox(height: 30),
-
-              // Classes by Day
-              _buildClassesByDay(entries),
-              const SizedBox(height: 30),
-
-              // Classes by Type
-              _buildClassesByType(entries),
-              const SizedBox(height: 30),
-
-              // Classes by Mode
-              _buildClassesByMode(entries),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
-  Widget _buildClassesByBatch(List<TimetableEntry> entries) {
+  Widget _buildClassesByBatch(List<TimetableEntry> entries, Map<String, String> batchNameMap) {
     final batchMap = <String, int>{};
     
     for (var entry in entries) {
@@ -3711,6 +3718,7 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
@@ -3730,30 +3738,52 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
           if (sortedBatches.isEmpty)
             const Text('No data available')
           else
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Batch')),
-                  DataColumn(label: Text('Count')),
-                  DataColumn(label: Text('%')),
-                ],
-                rows: sortedBatches.map((entry) {
-                  final percentage = (entry.value / entries.length * 100).toStringAsFixed(1);
-                  return DataRow(cells: [
-                    DataCell(Text(entry.key)),
-                    DataCell(Text(entry.value.toString())),
-                    DataCell(Text('$percentage%')),
-                  ]);
-                }).toList(),
-              ),
-            ),
+            ...sortedBatches.map((entry) {
+              final percentage = (entry.value / entries.length * 100).toStringAsFixed(1);
+              final batchName = batchNameMap[entry.key] ?? entry.key;
+              final fraction = entry.value / entries.length;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            batchName,
+                            style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${entry.value} ($percentage%)',
+                          style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey.shade700),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: fraction,
+                        minHeight: 8,
+                        backgroundColor: Colors.grey.shade200,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
         ],
       ),
     );
   }
 
-  Widget _buildClassesByDay(List<TimetableEntry> entries) {
+  Widget _buildClassesByDay(List<TimetableEntry> entries, bool isWide) {
     final dayMap = <String, int>{};
     final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     
@@ -3767,7 +3797,10 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
       }
     }
 
+    final maxCount = dayMap.values.fold(0, (a, b) => a > b ? a : b);
+
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
@@ -3784,48 +3817,55 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
             ),
           ),
           const SizedBox(height: 16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: dayMap.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: _getColorForCount(entry.value),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Center(
-                          child: Text(
-                            entry.value.toString(),
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+          Wrap(
+            spacing: isWide ? 12 : 6,
+            runSpacing: 12,
+            children: dayMap.entries.map((entry) {
+              final barHeight = maxCount > 0 ? (entry.value / maxCount * 100).clamp(8.0, 100.0) : 8.0;
+              return SizedBox(
+                width: isWide ? 50 : 38,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: isWide ? 36 : 28,
+                          height: barHeight,
+                          decoration: BoxDecoration(
+                            color: _getColorForCount(entry.value),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Center(
+                            child: Text(
+                              entry.value.toString(),
+                              style: GoogleFonts.poppins(
+                                fontSize: isWide ? 14 : 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        entry.key.substring(0, 3),
-                        style: GoogleFonts.poppins(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      entry.key.substring(0, 3),
+                      style: GoogleFonts.poppins(fontSize: isWide ? 12 : 10),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildClassesByType(List<TimetableEntry> entries) {
+  Widget _buildClassesByType(List<TimetableEntry> entries, bool isWide) {
     final typeMap = <String, int>{};
     
     for (var entry in entries) {
@@ -3835,6 +3875,7 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
     }
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
@@ -3851,51 +3892,68 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
             ),
           ),
           const SizedBox(height: 16),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: typeMap.entries.map((entry) {
-                final percentage = (entry.value / entries.length * 100).toStringAsFixed(1);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: _getTypeColor(entry.key),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          entry.key,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: typeMap.entries.map((entry) {
+              final percentage = (entry.value / entries.length * 100).toStringAsFixed(1);
+              return Container(
+                width: isWide ? null : double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _getTypeColor(entry.key),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: isWide
+                    ? Column(
+                        children: [
+                          Text(
+                            entry.key,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          entry.value.toString(),
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                          const SizedBox(height: 8),
+                          Text(
+                            entry.value.toString(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$percentage%',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.white,
+                          const SizedBox(height: 4),
+                          Text(
+                            '$percentage%',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            entry.key,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '${entry.value} ($percentage%)',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -3920,6 +3978,7 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
     }
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
@@ -3939,47 +3998,46 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
           if (modeStatus.isEmpty)
             const Text('No data available')
           else
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Mode')),
-                  DataColumn(label: Text('Total')),
-                  DataColumn(label: Text('Active')),
-                  DataColumn(label: Text('Cancelled')),
-                ],
-                rows: modeStatus.entries.map((entry) {
-                  final total = entry.value['total'] ?? 0;
-                  final cancelled = entry.value['cancelled'] ?? 0;
-                  final active = total - cancelled;
-                  
-                  return DataRow(cells: [
-                    DataCell(Text(entry.key)),
-                    DataCell(Text(total.toString())),
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade100,
-                          borderRadius: BorderRadius.circular(4),
+            ...modeStatus.entries.map((entry) {
+              final total = entry.value['total'] ?? 0;
+              final cancelled = entry.value['cancelled'] ?? 0;
+              final active = total - cancelled;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Theme.of(context).dividerColor),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        entry.key,
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                         ),
-                        child: Text(active.toString()),
                       ),
-                    ),
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade100,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(cancelled.toString()),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          _ModeChip(label: 'Total', value: total, color: Colors.blue),
+                          const SizedBox(width: 8),
+                          _ModeChip(label: 'Active', value: active, color: Colors.green),
+                          const SizedBox(width: 8),
+                          _ModeChip(label: 'Cancelled', value: cancelled, color: Colors.red),
+                        ],
                       ),
-                    ),
-                  ]);
-                }).toList(),
-              ),
-            ),
+                    ],
+                  ),
+                ),
+              );
+            }),
         ],
       ),
     );
@@ -4012,19 +4070,21 @@ class _MetricCard extends StatelessWidget {
   final String value;
   final IconData icon;
   final Color color;
+  final bool isCompact;
 
   const _MetricCard({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    this.isCompact = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
-      padding: const EdgeInsets.all(16),
+      width: isCompact ? 150 : 180,
+      padding: EdgeInsets.all(isCompact ? 12 : 16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         border: Border.all(color: color.withOpacity(0.3)),
@@ -4036,26 +4096,74 @@ class _MetricCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    fontSize: isCompact ? 11 : 12,
+                    color: Colors.grey.shade600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(icon, color: color, size: 20),
+              Icon(icon, color: color, size: isCompact ? 18 : 20),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             value,
             style: GoogleFonts.poppins(
-              fontSize: 28,
+              fontSize: isCompact ? 22 : 28,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Mode Chip Widget
+class _ModeChip extends StatelessWidget {
+  final String label;
+  final int value;
+  final Color color;
+
+  const _ModeChip({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value.toString(),
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 10,
+                color: color,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
